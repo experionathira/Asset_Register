@@ -1,0 +1,173 @@
+var express = require('express');
+var bodyParser = require('body-parser');
+var mysql = require('mysql');
+var cors = require('cors');
+var nodemailer=require('nodemailer');
+var md5=require('md5');
+var conn=mysql.createConnection({host:"localhost",user:"root",password:"",database:"asset"});
+var app = express();
+var jwt = require('jsonwebtoken');
+var adminRouter = express.Router(); 
+app.use(cors());
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
+/*--------------FOR ADDING A NEW USER TO A DEPARTMENT----------------------------------------------*/
+adminRouter.post('/addUser',function(req, res){
+
+	var token=req.headers.authorization;
+	token=JSON.parse(token);
+	var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+	 	if(err){
+	 		console.log("token expired");
+	 	}
+	 	else{
+	 		if(decoded.usertype == token.role){
+	        	var eid=req.body.eid;
+				var dept=req.body.department;
+				var password=req.body.password;
+				password2=md5(password);
+				var email=req.body.email;
+				var flag=1;
+				var js={"status":"403","message":"","token":""};
+				var obj={EID:eid,DeptID:dept,Password:password2,Flag:flag};
+				if(eid.length==""||password.length==""||dept.length==""||email.length==""||eid.length>8||password.length>32){
+					js.status=403;
+					js.message=err;
+					res.send(js);
+				}
+				else{
+					conn.query("insert into user(EID,DeptID,Password,Flag) values('"+eid+"','"+dept+"','"+password2+"','"+flag+"')",function(err,rows){
+							var js={"status":"","message":""};
+							if(err){
+								console.log(err);
+								js.status=403;
+								js.message=err;
+								res.send(js);
+							}
+							else{
+								js.status=200;
+								js.message="added";
+								sendMail(email,eid,password);
+								res.send(js);
+							}
+					
+					});
+				}
+			}
+			else{
+			    console.log("invalid user");
+			}
+		}
+	});	
+});
+/*--------------FOR GENERATING THE STATISTICS OF ALL DEPARTMENTS-----------------------------------------*/
+adminRouter.get('/statistics/all',function(req, res){
+
+	var token=req.headers.authorization;
+	token=JSON.parse(token);
+	var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+		if(err){
+		 		console.log("token expired");
+		}
+		else{
+		 	
+		 	if(decoded.usertype == token.role){
+		    
+				conn.query("select count(AssetID) as count,category.CategoryID from assets,category where  assets.CategoryID=category.CategoryID group by category.CategoryID " ,function(err,rows){
+					var js={"status":"","message":""};
+					if(err){
+						console.log(err);
+						js.status=403;
+						js.message="failed";
+						res.send(js);
+					}
+					else{
+						var data=JSON.stringify(rows);
+						console.log(rows);
+						var json=JSON.parse(data);
+						console.log(json);
+						res.send(json);
+					}
+				});
+			}
+			else{
+				    console.log("invalid user");
+			}
+		}
+	});	
+});
+
+/*--------------FOR GENERATING THE STATISTICS OF A DEPARTMENT-----------------------------------------*/
+adminRouter.get('/statistics/:dep',function(req, res){
+
+	var dept=req.params.dep;
+	var token=req.headers.authorization;
+	token=JSON.parse(token);
+	console.log(dept);
+	var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+		if(err){
+		 		console.log("token expired");
+		}
+		else{
+		 	
+		 	if(decoded.usertype == token.role){
+		    
+				conn.query("select count(AssetID) as count,category.CategoryID from assets,category where assets.DeptID = '"+dept+"' AND assets.CategoryID=category.CategoryID group by category.CategoryID " ,function(err,rows){
+					var js={"status":"","message":""};
+					if(err){
+						console.log(err);
+						js.status=403;
+						js.message="failed";
+						res.send(js);
+					}
+					else{
+						var data=JSON.stringify(rows);
+						console.log(rows);
+						var json=JSON.parse(data);
+						console.log(json);
+						res.send(json);
+					}
+				});
+			}
+			else{
+				    console.log("invalid user");
+			}
+		}
+	});	
+});
+
+/*--------------TO SEND EMAIL TO A USER ON SUCCESSFULL ADDITION-----------------------------------------*/
+var sendMail=function(toAddress,EID,Password) {
+
+	return new Promise(function(resolve,reject){
+	console.log("mail sent");
+	var to=toAddress;
+	var transporter = nodemailer.createTransport({
+			service: 'Gmail',
+			auth: {
+					user: 'assetregisterexp@gmail.com', 
+					pass: 'assetregister'
+				 }
+	});
+	var text = 'Dear employee,you can now access the Asset Register system.Your login credentials are User id  '+EID+' and password  '+Password ;
+
+	var mailOptions = {
+			 from: 'assetregisterexp@gmail.com', 
+			 to: to, 
+			 subject: 'LOGIN CREDENTIALS', 
+			 text: text 
+	};
+
+    transporter.sendMail(mailOptions, function(error, info){
+	if(!error){
+		 console.log(info);
+		 resolve(null);
+	}
+	else{
+		 reject(null);
+	}
+    });
+ });
+}
+module.exports = adminRouter;

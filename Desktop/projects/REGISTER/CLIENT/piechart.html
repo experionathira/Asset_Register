@@ -1,0 +1,52 @@
+﻿<!DOCTYPE HTML>
+<html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="SCRIPT/bootbox.min.js"></script>
+<link href="CSS/userstyle.css" rel="stylesheet" type="text/css">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="SCRIPT/canvasjs.min.js"></script>
+	<title>ASSET STATISTICS</title>
+</head>
+<body id="pie">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">ASSET REGISTER</a>
+    </div>
+ 
+    <div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+          <li><a onclick="redirect()"> HOME</a></li>
+          <li><a onclick="statistics('d1')">IT ASSET STATISTICS</a></li>
+          <li><a onclick="statistics('d2')">HR ASSET STATISTICS</a></li>
+          <li><a onclick="report()">GENERATE REPORT</a></li>
+        </ul>
+        <button  class="btn btn-default" id="logout" onclick="Logout()">Logout</button>  
+      </div>
+    </div>
+   
+  </div>
+</nav> 
+<div id="chartContainer" style="margin-top:60px; height: 400px; width: 100%;"></div><br><br>
+<div id="details"></div>
+	<button style="margin: 40px;margin-left: 45%; " id="back" onclick="back()">BACK</button>
+	
+<script type="text/javascript" src="SCRIPT/piechart.js"></script>
+<script type="text/javascript" src="SCRIPT/adminclient.js"></script>
+<script type="text/javascript" src="SCRIPT/stat.js"></script>
+</body>
+</html>

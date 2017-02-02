@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+	 <title> project </title>
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+	 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+	 <script src="SCRIPT/bootbox.min.js"></script>
+	 <script src = "SCRIPT/jquery-1.10.2.js"></script>
+	 <script src = "SCRIPT/jquery-ui.js"></script>
+	 <link href = "CSS/jquery-ui.css" rel = "stylesheet">
+	 <link href="CSS/admin.css" rel="stylesheet" type="text/css">
+</head>
+<body id="section1">
+			<nav class="navbar navbar-inverse navbar-fixed-top">
+		  	<div class="container-fluid">
+
+		    <div class="navbar-header">
+		        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+		          <span class="icon-bar"></span>
+		          <span class="icon-bar"></span>
+		          <span class="icon-bar"></span>                        
+		      </button>
+		      <a class="navbar-brand" href="#">ASSET REGISTER</a>
+		    </div>
+		 
+		    <div>
+		      <div class="collapse navbar-collapse" id="myNavbar">
+		      <ul class="nav navbar-nav">
+		          <li><a onclick="redirect()"> HOME</a></li>
+		          <li><a onclick="statistics('d1')">IT ASSET STATISTICS</a></li>
+		          <li><a onclick="statistics('d2')">HR ASSET STATISTICS</a></li>
+		          <li><a onclick="report()">GENERATE REPORT</a></li>
+		        </ul>
+		        <button  class="btn btn-default" id="logout" onclick="logout()">Logout</button>  
+		      </div>
+		    </div>
+		   
+		  </div>
+		</nav>
+		<center>
+		<div class="container-fluid" id="contents">
+			<div id="add">
+						
+				<form role="form"> 
+					<div class="form-group"> 
+						<input type="text" required class="form-control" id="start"  placeholder="select start date"> 
+					</div>
+					<div class="form-group"> 
+						<input type="text" required class="form-control" id="end"  placeholder="select end date"> 
+					</div>
+					<div class="log-btn">
+						<button type="button" id="statButton" onclick='generateStatistics();' class="btn btn-warning" >Submit</button> 
+					</div>
+				</form>  
+			</div>
+			<div id="statistics"></div>		 		
+		</div>
+	   </center> 
+	<script>
+	         $(function() {
+	            $( "#start" ).datepicker({
+	               dateFormat:"dd-mm-yy",
+	            });
+	         });
+	           $(function() {
+	            $( "#end" ).datepicker({
+	               dateFormat:"dd-mm-yy",
+	            });
+	         });
+	</script>
+	<script type="text/javascript" src="SCRIPT/stat.js"></script>
+	<script type="text/javascript" src="SCRIPT/bargraph.js"></script>
+	<script type="text/javascript" src="SCRIPT/adminclient.js"></script>
+</body>
+</html>

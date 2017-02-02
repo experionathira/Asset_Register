@@ -1,0 +1,158 @@
+body {
+  position: relative; 
+  background-color: white;
+   
+}
+.modal-header, h4, .close {
+      background-color: #f04c4c;
+      color:white !important;
+      text-align: center;
+      font-size: 30px;
+}
+
+.dropdown-menu{
+  min-width: 125px;
+}
+.navbar{
+  width: 100%;
+}
+button{
+  min-width: 125px;
+}
+#section1{
+  padding-top:50px;
+  min-height: 615px;
+  margin-top: 30px;
+  background : url("1.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+ 
+}
+
+
+#welcome{
+  width: 100%;
+  height: 530px;
+  text-align: center;
+  
+  background-size: 100% 100%;
+}
+h2{
+ 	margin-top:-20px;
+	margin-bottom:40px;
+ 	text-align: center;
+}
+#logout{
+  float: right;
+  margin:10px;
+}
+
+.table-responsive{
+  margin: 60px;
+  margin-top: -20px;
+  width: 900px;
+
+  /*margin-left: 120px;*/
+}
+thead{
+  background-color:#f04c4c;
+  color: white;
+}
+button{
+  background-color: transparent;
+  border-style: none;
+  color: #f04c4c;
+}
+.navbar-inverse .navbar-nav>li>a {
+  color: whitesmoke;
+  font-size: 14px;
+}
+.navbar-inverse .navbar-nav>li>a:hover{ 
+  color:red;
+}
+/*#print{
+  float: right;
+}*/
+#add{
+  margin-top: 150px;
+  width: 40%;
+}
+#statButton{
+  background-color: #f04c4c;
+  border-color: #f04c4c;
+}
+tr{
+  background-color: white;
+}
+#close2{
+  float: right;
+  margin-right: -80px;
+  margin-top: -30px;
+}
+#statistics{
+  width: 80%;
+  margin-top: 40px;
+}
+#thead{
+  background-color: #f04c4c;
+  color: white;
+}
+#close{
+  float: right;
+  margin-right: -60px;
+  margin-top: -10px;
+}
+
+ @media only screen and (min-device-width: 200px) and (max-device-width: 414px) and (-webkit-min-device-pixel-ratio: 2) {
+.table-responsive{
+    margin: 5px;
+    margin-top: 20px;
+    width: 380px;
+}
+h2{
+   margin-top: 10px;
+   font-size: 15px;
+   font-weight: bold;
+}
+#section1{
+  min-height: 720px;
+}
+#welcome{
+  height: 530px;
+}
+.navbar-toggle{
+  float: right;
+  margin-right: -10px;
+}
+#statistics{
+  width: 90%;
+  margin-top: 40px;
+  
+}
+#hide{
+  display: none;
+}
+.btn-group{
+  border-color: black;
+}
+#new{
+  font-size: 15px;
+}
+#stat{
+  width: 90%;
+}
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-height: 80%;
+}
+#myModal{
+    margin-top: 100px;
+}

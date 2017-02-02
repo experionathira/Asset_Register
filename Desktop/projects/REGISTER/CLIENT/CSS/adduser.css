@@ -1,0 +1,59 @@
+#main {
+	width: 100%;
+}
+
+#header {
+
+	background-color:  #4682B4;
+	padding: 30px;
+}
+
+#head {
+	width: 48%;
+	color: white;
+	display: inline-block;
+}
+
+#logout_div {
+	width: 48%;
+	display: inline-block;
+	
+}
+#username {
+	float: right;
+	color: white;
+}
+#logout_button {
+	
+	float: right;
+}
+#content {
+	width: 100%;
+}
+
+#addtask {
+	width: 30%;
+}
+#list {
+	
+	color: black;
+	background-color: #D3D3D3;
+}
+
+
+
+li {
+	display: inline-block;
+	padding: 10px;
+	}
+
+a:hover{
+	background-color:#808080; 
+
+}
+
+
+#assign {
+	background-color: #4682B4;
+	color: white;
+}

@@ -1,0 +1,250 @@
+var express = require('express');
+var bodyParser = require('body-parser');
+var mysql = require('mysql');
+var cors = require('cors');
+var nodemailer=require('nodemailer');
+var md5=require('md5');
+var conn=mysql.createConnection({host:"localhost",user:"root",password:"",database:"asset"});
+var app = express();
+var jwt = require('jsonwebtoken');
+var employeeRouter = express.Router(); 
+app.use(cors());
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
+/*----------------------------------TO FETCH THE RECORDS----------------------------------------------*/
+employeeRouter.get('/assets/:deptid/:empid',function(req, res){
+	
+	 
+	 var token=req.headers.authorization;
+	 console.log(token);
+	 var did=req.params.deptid;
+	 var eid=req.params.empid;
+	 token=JSON.parse(token);
+	 var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+	 	if(err){
+	 		console.log("token expired");
+	 	}
+	 	else{
+	 		if(decoded.usertype == token.role){
+	        
+			  console.log("valid user"+did);
+			  conn.query("select AssetID,AssetName,CategoryID,DeptID,CONCAT(EXTRACT(DAY FROM Date),'/',EXTRACT(MONTH FROM Date),'/',EXTRACT(YEAR FROM Date)) Date,EID,Price,Location,Description from assets  where EID='"+eid+"' AND DeptID='"+did+"'",function(err,rows){
+			  var data=JSON.stringify(rows);
+			  var json=JSON.parse(data);
+			  res.send(json);
+				});
+			 }
+			 else{
+			    console.log("invalid user");
+			 }
+		}
+	});
+		
+	 	
+});
+
+/*----------------------------------FOR INSERTING A NEW ENTRY---------------------------------------------*/
+employeeRouter.post('/insert',function(req, res){
+
+	 var token=req.headers.authorization;
+	 token=JSON.parse(token);
+	 console.log(token);
+	 console.log(token.token,token.role);
+	 var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+	 	if(err){
+	 		console.log("token expired");
+	 	}
+	 	else{
+	 
+	 		if(decoded.usertype == token.role){
+	        
+				var name=req.body.name;
+				var cat=req.body.cat;
+				var date=req.body.date;
+				console.log(date);
+				var dept=req.body.deptid;
+				var price=req.body.price;
+				var location=req.body.location;
+				var description=req.body.description;
+				var eid=req.body.eid;
+				if(name.length==""||cat.length==""||dept.length==""||price.length==""||location.length==""){
+
+					console.log("error");
+					var js={"status":"403","message":"","token":""};
+					res.send(js);
+					return false;
+				}
+				else{
+				
+					var obj={AssetName:name,CategoryID:cat,Date:date,DeptID:dept,EID:eid,Price:price,Location:location,Description:description};
+					console.log(obj);
+					conn.query("insert into assets set ?" ,obj,function(err,result){
+
+						var js={"status":"","message":""};
+						if(err){
+							console.log(err);
+							js.status=403;
+							js.message="failed";
+							res.send(js);
+						}
+						 else{
+
+							js.status=200;
+							js.message="added";
+							sendMail("aliya.azad@experionglobal.com",name,dept,eid);
+							res.send(js);
+						}
+				
+					});
+			 	}
+	  		}
+
+			else{
+			    console.log("invalid user");
+			}
+		}
+
+
+	});	
+});
+
+
+
+/*------------------------------TO DELETE AN ENTRY---------------------------------------------------------*/
+employeeRouter.delete('/',function(req, res){
+	
+	 var token=req.headers.authorization;
+	 token=JSON.parse(token);
+	 var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+	 	if(err){
+	 		console.log("token expired");
+	 	}
+	 	else{
+	 		if(decoded.usertype == token.role){
+			 	var id=req.body.id;
+				conn.query("delete from assets where AssetID=?",[id],function(err,rows){
+				var js={"status":"","message":""};
+					if(err){
+						console.log(err);
+						js.status=403;
+						js.message="failed";
+						res.send(js);
+					}
+
+					else{
+							js.status=200;
+							js.message="deleted";
+							res.send(js);
+					}
+				console.log("deleted values");
+					
+				 });
+			}
+			else{
+			    console.log("invalid user");
+			}
+		}
+	 });
+});
+
+/*--------------FOR GENERATING THE STATISTICS OF A DEPARTMENT-----------------------------------------*/
+employeeRouter.post('/changePassword',function(req, res){
+
+	var token=req.headers.authorization;
+	token=JSON.parse(token);
+	console.log(token);
+	console.log(token.token,token.role);
+	var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+		if(err){
+		 		console.log("token expired");
+		}
+		else{
+		 	
+		 	if(decoded.usertype == token.role){
+		    
+		    	var eid=req.body.empid;
+				var curp=req.body.curp;
+				var newp=req.body.newp;
+				curp=md5(curp);
+				newp=md5(newp);
+				conn.query("select Password from user where EID=?",[eid],function(err,rows){
+					console.log("aliya");
+					var js={"status":"","message":""};
+					if(err){
+						console.log(err);
+						js.status=403;
+						js.message="failed";
+						console.log(js);
+						res.send(js);
+					}
+					else{
+						var data=JSON.stringify(rows);
+						var json=JSON.parse(data);
+						console.log(json[0].Password);
+						if(curp==json[0].Password){
+							conn.query('update user set Password = ? where EID = ?',[newp,eid] ,function(err,rows){
+								if(err){
+									console.log(err);
+									js.status=403;
+									js.message="failed";
+									res.send(js);
+									
+								}
+								else{
+									console.log("success");
+									js.status=200;
+									js.message="success";
+									res.send(js);
+									
+								}
+							});
+						}
+					}
+				
+				});
+			}
+			else{
+				    console.log("invalid user");
+				    res.end();
+			}
+		}
+	});	
+});
+
+/*-----------------------TO SEND EMAIL AFTER SUCCESSFUL INSERTION-----------------------------------------*/
+var sendMail=function(toAddress,AssetName,DeptID,EID) {
+
+	return new Promise(function(resolve,reject){
+	console.log("mail sent");
+	var to="aliya.azad@experionglobal.com";
+	var transporter = nodemailer.createTransport({
+			service: 'Gmail',
+			auth: {
+					user: 'assetregisterexp@gmail.com', // Your email id
+					pass: 'assetregister' // Your password
+				 }
+	});
+	var text = 'A new asset '+AssetName+' has been added to department '+DeptID+' by '+EID ;
+
+	var mailOptions = {
+			 from: 'assetregisterexp@gmail.com', 
+			 to: to, 
+			 subject: 'New Asset Added', 
+			 text: text 
+	};
+
+    transporter.sendMail(mailOptions, function(error, info){
+	if(!error){
+		 console.log(info);
+		 resolve();
+	}
+	else{
+		 reject();
+	}
+    });
+ });
+}
+module.exports = employeeRouter;
+
+

@@ -1,0 +1,76 @@
+body{
+	width: 100%;
+	margin: 0px;
+	float: left;
+	background-image: url('background.jpg');
+	background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+#main{
+	float: right;
+}
+.header{
+	text-align: center;
+	
+}
+#heading{
+	font-size: 80px;
+	color: #2b333e;
+	font-weight: bold;
+	font-family: Impact;
+}
+#loginform{
+	width: 300px;
+	margin-top: 150px;
+
+}
+.input-group{
+	margin: 10px;
+}
+#content{
+	 min-height: 330px;
+}
+
+.btn{
+	color: #2b333e;
+	font-weight: bold;
+	background-color: #eee;
+}
+.warning1,.warning2,.warning3{
+	display: none;
+	width: 350px;
+}
+.form-control{
+	width: 200px;
+}
+#forgotpass{
+	color: red;
+	font-size: 15px;
+	float: right;
+}
+.checkbox{
+	
+	margin-top: 0px;
+}
+@media only screen and (min-device-width: 200px) and (max-device-width: 414px) and (-webkit-min-device-pixel-ratio: 2) {
+body{
+	width: 100%;
+	background-image: url("bc.jpg");
+	}
+a{
+	color: red;
+}
+#heading{
+	font-size: 60px;
+}
+
+#loginform{
+	margin-top: 100px;
+}
+.warning1,.warning2,.warning3{
+	display: none;
+	width:250px; 
+}
+
+}

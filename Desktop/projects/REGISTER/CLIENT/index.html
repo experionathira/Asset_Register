@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ASSET REGISTER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	  <script src="SCRIPT/bootbox.min.js"></script>
+	  <script type="text/javascript" src="SCRIPT/2.5.3-crypto-md5.js"></script>
+	  <link href="CSS/homestyle.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div id="main">
+  <div class="header"> <h1 id="heading">ASSET REGISTER</h1></div>
+  <div id="content">
+  <center>
+  <form id="loginform">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="eid" type="text" class="form-control" name="email" placeholder="Employee ID">
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+        <input id="password" type="password" class="form-control" name="password" placeholder="Password">
+      </div>
+      <label class="checkbox" id="check">
+              <input type="checkbox" value="remember-me" id="remember_me"> Remember me
+      </label>
+      	<div id="forgotpass">
+      	<a>Forgot Password?</a></div><br>
+  	  <br>
+       <button type="button" class="btn btn-default" onclick="validate()"><b>LOGIN<b></button>
+    </form>
+  </center>
+  </div>
+  </div>
+  <script type="text/javascript" src="SCRIPT/script.js">
+  </script>
+</body>
+</html>

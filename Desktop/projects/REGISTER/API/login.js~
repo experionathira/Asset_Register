@@ -1,0 +1,106 @@
+var express = require('express');
+var bodyParser = require('body-parser');
+var mysql = require('mysql');
+var nodemailer=require('nodemailer');
+var cors = require('cors');
+var md5=require('md5');
+var conn=mysql.createConnection({host:"localhost",user:"root",password:"",database:"asset"});
+var app = express();
+var jwt = require('jsonwebtoken');
+var userRouter = express.Router(); 
+app.use(cors());
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
+
+var employee = require('./user');
+var admin = require('./admin');
+
+app.use('/',employee);
+app.use('/',admin);
+app.use('/',userRouter);
+
+/*------------------------------FOR LOGIN----------------------------------------------------*/
+userRouter.post('/',function(req, res){
+
+	var id=req.body.eid;
+	var pass=req.body.password;
+	if(id.length==""||pass.length==""||id.length>8||pass.length>32){
+
+		console.log("error");
+		var js={"status":"403","message":"","token":""};
+		res.send(js);
+		return false;
+	}
+	else{
+
+		conn.query("select EID,Password,Flag,DeptID from user where eid='"+id+"' and password='"+pass+"'",function(err,rows){
+			var js={"status":"","message":"","usertype":null,"deptid":"","eid":""};
+			if(rows.length == 0 ){
+
+				js.status='403';
+				js.message="failed";
+				res.send(js);
+				
+			}
+			else{
+
+				var data=JSON.stringify(rows);
+				var json=JSON.parse(data);
+				var js={"status":"","message":"","usertype":null,"deptid":"","eid":""};
+				if(rows.length==1){
+						js.status='200';
+						js.message="success";
+						if(json[0].Flag==0){
+							js.usertype="admin";
+						}
+						else{
+							js.usertype="user";
+						}
+				}
+				var token = jwt.sign({ usertype: js.usertype}, 'aliya',{expiresIn:60*10000});
+				js.token=token;
+				js.eid=json[0].EID;
+				js.deptid=json[0].DeptID;
+				console.log(token);
+				res.send(js);
+			}
+		});
+	}	
+});
+
+/*----------------------------------TO FETCH THE RECORDS----------------------------------------------*/
+userRouter.get('/fetch/:did',function(req, res){
+	
+	 
+	 var token=req.headers.authorization;
+	 console.log(token);
+	 var did=req.params.did;
+	 token=JSON.parse(token);
+	 var decoded = jwt.verify(token.token, 'aliya',function(err,decoded){
+	 	if(err){
+	 		console.log("token expired");
+	 	}
+	 	else{
+	 		if(decoded.usertype == token.role){
+	        
+			  console.log("valid user"+did);
+			  conn.query("select AssetID,AssetName,CategoryID,DeptID,CONCAT(EXTRACT(DAY FROM Date),'/',EXTRACT(MONTH FROM Date),'/',EXTRACT(YEAR FROM Date)) Date,EID,Price,Location,Description from assets  where DeptID='"+did+"'",function(err,rows){
+			  var data=JSON.stringify(rows);
+			  var json=JSON.parse(data);
+			  res.send(json);
+				});
+			 }
+			 else{
+			    console.log("invalid user");
+			 }
+		}
+	});
+		
+	 	
+});
+var server = app.listen(8088,function(){
+	var host = server.address().address;
+	var port = server.address().port;
+	console.log("Listening at %s on port %s", host, port);
+});
